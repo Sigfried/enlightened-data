@@ -1,0 +1,31 @@
+{
+   "name": "englightened-data",
+   "version": "0.0.1",
+   "description": "Nested groups on arrays of objects where groups are Strings that know what you want them to know about themselves and their relatives.",
+   "keywords": [
+       "groups",
+       "visualization" 
+   ],
+   "author": {
+           "name": "Sigfried Gold",
+           "web": "http://www.sigfried.org" 
+    },
+   "licenses": [
+       {
+           "type": "MIT",
+           "url": "http://sigfried.mit-license.org/",
+       } 
+   ],
+   "repositories": [
+       {
+           "type": "git",
+           "url": "git@github.com:Sigfried/enlightened-data.git",
+       } 
+   ],
+   "dependencies": {
+       "d3": "3.1.6",
+       "underscore": "1.4.4",
+       "bootstrap": "2.3.1",
+       "jquery": "1.9.1",
+   },
+}
