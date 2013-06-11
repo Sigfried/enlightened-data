@@ -66,6 +66,8 @@ var enlightenedData = (function() {
         var list = e.compare(fromGroup, toGroup, dim);
         list.dim = (opts && opts.dimName) ? opts.dimName : dim;
         _.extend(list.__proto__, e.group.prototype);
+        if (opts && opts.asVal) {
+        }
         return list;
     }
     e.group = function(list, dim, opts) {
@@ -117,11 +119,27 @@ var enlightenedData = (function() {
         if (query in this.lookupMap)
             return this.lookupMap[query];
     };
+    e.compareValue = function(from, to) {
+        if (from.dim !== to.dim) {
+            throw new Error("not sure what you're trying to do");
+        }
+        var name = from + ' to ' + to;
+        var val = new String(name);
+        val.from = from;
+        val.to = to;
+        val.depth = 0;
+        val.in = "both";
+        val.records = [].concat(from.records,to.records);
+        val.records.parentVal = val; // NOT TESTED, NOT USED, PROBABLY WRONG
+        val.dim = from.dim;
+        _.extend(val.__proto__, e.valMethods.prototype);
+        return val;
+    };
     e.valMethods = function() {};
     e.valMethods.prototype.extendGroupBy = function(dim, opts) {
         _.each(this.leafNodes(), function(d) {
             if (d.in && d.in === "both") {
-                d.kids = diffGroup(d.from, d.to, dim, opts);
+                d.kids = e.diffGroup(d.from, d.to, dim, opts);
             } else {
                 d.kids = e.group(d.records, dim, opts);
                 if (d.in ) {
