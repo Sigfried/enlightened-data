@@ -56,6 +56,7 @@ var enlightenedData = (function() {
                         "result"
                         ];
         _(methods).each(function(methodName) {
+            if (_(obj).has(methodName)) return;
             Object.defineProperty(obj, methodName, {
                 value: function() {
                     var part = _.partial(_[methodName], obj)
