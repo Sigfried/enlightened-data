@@ -6,9 +6,13 @@ var enlightenedData = (function() {
     function makeGroups(arr_arg) {
         var arr = [ ];
         arr.push.apply(arr, arr_arg);
-        arr.__proto__ = Groups.prototype;
+        //arr.__proto__ = Groups.prototype;
+        for(var method in Groups.prototype) {
+            Object.defineProperty(arr, method, {
+                value: Groups.prototype[method]
+            });
+        }
         addUnderscoreMethods(arr);
-        //Object.defineProperty(arr, '_', { value: _(arr) });
         return arr;
     }
     function addUnderscoreMethods(obj) {
@@ -78,14 +82,24 @@ var enlightenedData = (function() {
     StringValue.prototype = new String;
     function makeStringValue(s_arg) {
         var S = new String(s_arg);
-        S.__proto__ = StringValue.prototype;
+        //S.__proto__ = StringValue.prototype;
+        for(var method in StringValue.prototype) {
+            Object.defineProperty(S, method, {
+                value: StringValue.prototype[method]
+            });
+        }
         return S;
     }
     function NumberValue() {}
     NumberValue.prototype = new Number;
     function makeNumberValue(n_arg) {
         var N = new Number(n_arg);
-        N.__proto__ = NumberValue.prototype;
+        //N.__proto__ = NumberValue.prototype;
+        for(var method in NumberValue.prototype) {
+            Object.defineProperty(N, method, {
+                value: NumberValue.prototype[method]
+            });
+        }
         return N;
     }
     function wholeListNumeric(groups) {
@@ -408,7 +422,12 @@ var enlightenedData = (function() {
     _.extend(NumberValue.prototype, Value.prototype);
     e.addGroupMethods = function(arr) {
         //_.extend(arr.__proto__, Groups.prototype);// pollutes global array prototype
-        arr.__proto__ = Groups.prototype;
+        //arr.__proto__ = Groups.prototype; // doesn't work in IE 10
+        for(var method in Groups.prototype) {
+            Object.defineProperty(arr, method, {
+                value: Groups.prototype[method]
+            });
+        }
         addUnderscoreMethods(arr);
         //Object.defineProperty(arr, '_', { value: _(arr) });
         return arr;
