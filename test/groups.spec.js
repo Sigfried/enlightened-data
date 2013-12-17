@@ -58,4 +58,26 @@ describe('Groups', function() {
             expect(get_raw([true, false])).toEqual(['true', 'false']);
         });
     });
+    describe('underscoreMethods', function() {
+        //var arr;
+        function addMethods(array) {
+            var groups = enlightenedData.addGroupMethods(array);
+            return groups;
+        }
+        /*
+        beforeEach(function() {
+            arr = addMethods([1,2,3]);
+            _(enlightenedData.underscoreMethods).each(function(method) {
+                spyOn(arr, method);
+                arr[method]();
+            })
+        })
+        */
+        it('should add all the methods', function() {
+            var arr = addMethods([1,2,3]);
+            _(enlightenedData.underscoreMethods).each(function(method) {
+                expect(typeof arr[method]).toEqual("function");
+            })
+        });
+    });
 });

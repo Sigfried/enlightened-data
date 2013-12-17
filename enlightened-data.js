@@ -12,54 +12,54 @@ var enlightenedData = (function() {
                 value: Groups.prototype[method]
             });
         }
-        addUnderscoreMethods(arr);
+        //addUnderscoreMethods(arr);
         return arr;
     }
+    e.underscoreMethods = [ 
+            //"each",
+            //"map",
+            "reduce",
+            "find",
+            "filter",
+            "reject",
+            "all",
+            "every",
+            "any",
+            "some",
+            "contains",
+            "invoke",
+            "pluck",
+            "where",
+            "findWhere",
+            "max",
+            "min",
+            "shuffle",
+            "sortBy",
+            "groupBy",
+            "countBy",
+            "sortedIndex",
+            "size",
+            "first",
+            "initial",
+            "last",
+            "rest",
+            "compact",
+            "flatten",
+            "without",
+            "uniq",
+            "union",
+            "intersection",
+            "difference",
+            "zip",
+            "unzip",
+            //"object",
+            "indexOf",
+            "lastIndexOf",
+            "chain",
+            "result"
+            ];
     function addUnderscoreMethods(obj) {
-        var methods = [
-                        "each",
-                        "map",
-                        "reduce",
-                        "find",
-                        "filter",
-                        "reject",
-                        "all",
-                        "every",
-                        "any",
-                        "some",
-                        "contains",
-                        "invoke",
-                        "pluck",
-                        "where",
-                        "findWhere",
-                        "max",
-                        "min",
-                        "shuffle",
-                        "sortBy",
-                        "groupBy",
-                        "countBy",
-                        "sortedIndex",
-                        "size",
-                        "first",
-                        "initial",
-                        "last",
-                        "rest",
-                        "compact",
-                        "flatten",
-                        "without",
-                        "uniq",
-                        "union",
-                        "intersection",
-                        "difference",
-                        "zip",
-                        "unzip",
-                        //"object",
-                        "indexOf",
-                        "lastIndexOf",
-                        "chain",
-                        "result"
-                        ];
-        _(methods).each(function(methodName) {
+        _(e.underscoreMethods).each(function(methodName) {
             if (_(obj).has(methodName)) return;
             Object.defineProperty(obj, methodName, {
                 value: function() {
@@ -417,20 +417,16 @@ var enlightenedData = (function() {
         val.records.parentVal = val; // NOT TESTED, NOT USED, PROBABLY WRONG
         val.dim = from.dim;
         return val;
-        //return Value(val);
     };
     _.extend(StringValue.prototype, Value.prototype);
     _.extend(NumberValue.prototype, Value.prototype);
     e.addGroupMethods = function(arr) {
-        //_.extend(arr.__proto__, Groups.prototype);// pollutes global array prototype
-        //arr.__proto__ = Groups.prototype; // doesn't work in IE 10
         for(var method in Groups.prototype) {
             Object.defineProperty(arr, method, {
                 value: Groups.prototype[method]
             });
         }
         addUnderscoreMethods(arr);
-        //Object.defineProperty(arr, '_', { value: _(arr) });
         return arr;
     }
     return e;
