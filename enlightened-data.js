@@ -1,8 +1,19 @@
+/**
+ * @file Defines the EnlightenedData structure
+ * @author Sigfried Gold <sigfried@sigfried.org>
+ * @license http://sigfried.mit-license.org/
+ */
+
 'use strict';
+
 var enlightenedData = (function() {
+
+    /** @namespace enlightenedData */
     var e = {};
+
     function Groups() {}
     Groups.prototype = new Array;
+    
     function makeGroups(arr_arg) {
         var arr = [ ];
         arr.push.apply(arr, arr_arg);
@@ -15,6 +26,10 @@ var enlightenedData = (function() {
         //addUnderscoreMethods(arr);
         return arr;
     }
+
+    /** underscore library methods to be attached to e
+     * @memberof enlightenedData 
+     */
     e.underscoreMethods = [ 
             //"each",
             //"map",
@@ -119,6 +134,16 @@ var enlightenedData = (function() {
         return isNumeric;
     }
     var childProp = 'children';
+
+    /**
+     * Group records by a dimension
+     *
+     * @param list Records to be grouped
+     * @param dim Dimension to group by
+     * @param opts
+     *
+     * @memberof enlightenedData
+     */
     e.group = function(list, dim, opts) {
         opts = opts || {};
         childProp = opts.childProp || childProp;
@@ -333,6 +358,14 @@ var enlightenedData = (function() {
     Value.prototype.pct = function() {
         return this.records.length / this.parentList.records.length;
     };
+
+    /** Summarize records by a dimension
+     *
+     * @param list Records to be summarized
+     * @param numericDim Dimension to summarize by
+     *
+     * @memberof enlightenedData
+     */
     e.aggregate = function(list, numericDim) { 
         if (numericDim) {
             list = _(list).pluck(numericDim);
@@ -345,9 +378,16 @@ var enlightenedData = (function() {
                     return memo
                 },{sum:0,cnt:0,max:-Infinity})
     }; 
-    /* following is to support a particular use case of comparing
-     * groups across two similar root nodes
+    /** Compare groups across two similar root notes
+     *
+     * @param from
+     * @param to
+     * @param dim
+     * @param opts
+     *
      * used by treelike and some earlier code
+     *
+     * @memberof enlightenedData
      */
     e.diffGroup = function(from, to, dim, opts) {
         var fromGroup = e.group(from.records, dim, opts);
@@ -356,6 +396,15 @@ var enlightenedData = (function() {
         list.dim = (opts && opts.dimName) ? opts.dimName : dim;
         return list;
     }
+
+    /** Compare two groups by a dimension
+     *
+     * @param A
+     * @param B
+     * @param dim
+     *
+     * @memberof enlightenedData
+     */
     e.compare = function(A, B, dim) {
         var a = _(A).map(function(d) { return d+'' });
         var b = _(B).map(function(d) { return d+'' });
@@ -403,6 +452,14 @@ var enlightenedData = (function() {
         });
         return list;
     }
+
+    /** Concatenate two Values into a new one (??)
+     *
+     * @param from
+     * @param to
+     *
+     * @memberof enlightenedData
+     */
     e.compareValue = function(from, to) {
         if (from.dim !== to.dim) {
             throw new Error("not sure what you're trying to do");
@@ -420,6 +477,13 @@ var enlightenedData = (function() {
     };
     _.extend(StringValue.prototype, Value.prototype);
     _.extend(NumberValue.prototype, Value.prototype);
+
+    /** Turn a standard array into a Group
+     *
+     * @param arr {Array} Array to be extended
+     *
+     * @memberof enlightenedData
+     */
     e.addGroupMethods = function(arr) {
         for(var method in Groups.prototype) {
             Object.defineProperty(arr, method, {
