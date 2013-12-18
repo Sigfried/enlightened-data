@@ -222,9 +222,6 @@ var enlightenedData = (function() {
     Groups.prototype.rawValues = function() {
         return _(this).map(function(d) { return d.toString() });
     };
-    Groups.prototype.wrap = function() {
-        return _(this);
-    }
     Groups.prototype.lookup = function(query) {
         if (_.isArray(query)) {
             // if group has children, can search down the tree
@@ -478,7 +475,9 @@ var enlightenedData = (function() {
     _.extend(StringValue.prototype, Value.prototype);
     _.extend(NumberValue.prototype, Value.prototype);
 
-    /** Turn a standard array into a Group
+    /** Sometimes a Group gets turned into a standard array,
+     *  e.g., through slicing or sorting or filtering. 
+     *  addGroupMethods turns it back into a Group
      *
      * @param arr {Array} Array to be extended
      *
