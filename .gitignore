@@ -1,4 +1,4 @@
+.gitignore
 *.swp
 doc
 node_modules
-.gitignore

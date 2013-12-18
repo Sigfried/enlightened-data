@@ -9,32 +9,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
       "type": "file",
       "data": {
         "language": {
-          "nameMatchers": [".md"],
-          "commentsOnly": true,
-          "name": "Markdown"
-        },
-        "sourcePath": "/Users/sigfried/Sites/enlightened-data/README.md",
-        "projectPath": "README.md",
-        "targetPath": "index",
-        "pageTitle": "index",
-        "firstHeader": {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "enlightened-data",
-            "slug": "enlightened-data",
-            "isFileHeader": true
-          },
-          "depth": 1
-        },
-        "title": "enlightened-data"
-      },
-      "depth": 1,
-      "outline": []
-    }, {
-      "type": "file",
-      "data": {
-        "language": {
           "nameMatchers": [".js"],
           "pygmentsLexer": "javascript",
           "multiLineComment": ["/*", "*", "*/"],
@@ -45,8 +19,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         },
         "sourcePath": "/Users/sigfried/Sites/enlightened-data/enlightened-data.js",
         "projectPath": "enlightened-data.js",
-        "targetPath": "enlightened-data",
-        "pageTitle": "enlightened-data",
+        "targetPath": "index",
+        "pageTitle": "index",
         "firstHeader": {
           "type": "heading",
           "data": {
@@ -98,6 +72,32 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "depth": 3
         }
       ]
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".md"],
+          "commentsOnly": true,
+          "name": "Markdown"
+        },
+        "sourcePath": "/Users/sigfried/Sites/enlightened-data/README.md",
+        "projectPath": "README.md",
+        "targetPath": "README",
+        "pageTitle": "README",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "enlightened-data",
+            "slug": "enlightened-data",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "enlightened-data"
+      },
+      "depth": 1,
+      "outline": []
     }, {
       "type": "file",
       "data": {
