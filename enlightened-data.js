@@ -23,16 +23,23 @@ var enlightenedData = (function() {
                 value: Groups.prototype[method]
             });
         }
-        //addUnderscoreMethods(arr);
+        addUnderscoreMethods(arr);
         return arr;
     }
 
-    /** underscore library methods to be attached to e
+    /** {@link http://underscorejs.org/ Underscore} functions that work on arrays get added as methods to Groups.
+     * When an underscore method returns an array, the returned array
+     * also gets extended with these methods
+     *
+     * @example
+     * group.where({foo:bar}).invoke('baz')
+     * @returns whatever the underscore function would return
+     *
      * @memberof enlightenedData 
      */
     e.underscoreMethods = [ 
-            //"each",
-            //"map",
+            "each",
+            "map",
             "reduce",
             "find",
             "filter",
