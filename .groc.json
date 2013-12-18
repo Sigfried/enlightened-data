@@ -1,5 +1,6 @@
 {
   "glob": ["enlightened-data.js", "README.md", "test/*.js"],
   "github": false,
-  "repository-url": "https://github.com/Sigfried/enlightened-data"
+  "repository-url": "https://github.com/Sigfried/enlightened-data",
+  "index": "enlightened-data.js"
 }
