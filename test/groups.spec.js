@@ -10,7 +10,6 @@ describe('Groups', function() {
     it('should apply Groups methods to arrays', function() {
         expect(self.groups.asRootVal).toBeDefined();
         expect(self.groups.rawValues).toBeDefined();
-        expect(self.groups.wrap).toBeDefined();
         expect(self.groups.lookup).toBeDefined();
         expect(self.groups.singleLookup).toBeDefined();
         expect(self.groups.flattenTree).toBeDefined();

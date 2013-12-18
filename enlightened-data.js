@@ -1,157 +1,64 @@
-/**
- * @file Defines the EnlightenedData structure
- * @author Sigfried Gold <sigfried@sigfried.org>
- * @license http://sigfried.mit-license.org/
- * Don't trust this documentation yet. It's just beginning to be
- * written.
+/*
+# enlightened-data.js
+
+Author: [Sigfried Gold](http://sigfried.org)  
+License: [MIT](http://sigfried.mit-license.org/)  
+
+### Don't trust this documentation yet. It's just beginning to be written.
  */
 
 'use strict';
-
+// @module enlightenedData
+// @public
 var enlightenedData = (function() {
-
-    /** @namespace enlightenedData */
     var e = {};
 
+    /*
+    * `Groups` would be a constructor if IE10 supported
+    * \_\_proto\_\_, so it pretends to be one instead.
+    */
     function Groups() {}
-    Groups.prototype = new Array;
-    
-    function makeGroups(arr_arg) {
-        var arr = [ ];
-        arr.push.apply(arr, arr_arg);
-        //arr.__proto__ = Groups.prototype;
-        for(var method in Groups.prototype) {
-            Object.defineProperty(arr, method, {
-                value: Groups.prototype[method]
-            });
-        }
-        addUnderscoreMethods(arr);
-        return arr;
-    }
+    Groups.prototype = new Array;  // not sure if this is still necessary
+    /*
+### Group records by a dimension
 
-    /** {@link http://underscorejs.org/ Underscore} functions that work on arrays get added as methods to Groups.
-     * When an underscore method returns an array, the returned array
-     * also gets extended with these methods
-     *
-     * @example
-     * group.where({foo:bar}).invoke('baz')
-     * @returns whatever the underscore function would return
-     *
-     * @memberof enlightenedData 
-     */
-    e.underscoreMethods = [ 
-            "each",
-            "map",
-            "reduce",
-            "find",
-            "filter",
-            "reject",
-            "all",
-            "every",
-            "any",
-            "some",
-            "contains",
-            "invoke",
-            "pluck",
-            "where",
-            "findWhere",
-            "max",
-            "min",
-            "shuffle",
-            "sortBy",
-            "groupBy",
-            "countBy",
-            "sortedIndex",
-            "size",
-            "first",
-            "initial",
-            "last",
-            "rest",
-            "compact",
-            "flatten",
-            "without",
-            "uniq",
-            "union",
-            "intersection",
-            "difference",
-            "zip",
-            "unzip",
-            //"object",
-            "indexOf",
-            "lastIndexOf",
-            "chain",
-            "result"
-            ];
-    function addUnderscoreMethods(obj) {
-        _(e.underscoreMethods).each(function(methodName) {
-            if (_(obj).has(methodName)) return;
-            Object.defineProperty(obj, methodName, {
-                value: function() {
-                    var part = _.partial(_[methodName], obj)
-                    var result = part.apply(null, _.toArray(arguments));
-                    if (_.isArray(result)) e.addGroupMethods(result);
-                    return result;
-                }})
-        })
-    }
-    function Value() {}
-    function makeValue(v_arg) {
-        if (isNaN(v_arg)) {
-            return makeStringValue(v_arg);
-        } else {
-            return makeNumberValue(v_arg);
-        }
-    }
-    function StringValue() {}
-    StringValue.prototype = new String;
-    function makeStringValue(s_arg) {
-        var S = new String(s_arg);
-        //S.__proto__ = StringValue.prototype;
-        for(var method in StringValue.prototype) {
-            Object.defineProperty(S, method, {
-                value: StringValue.prototype[method]
-            });
-        }
-        return S;
-    }
-    function NumberValue() {}
-    NumberValue.prototype = new Number;
-    function makeNumberValue(n_arg) {
-        var N = new Number(n_arg);
-        //N.__proto__ = NumberValue.prototype;
-        for(var method in NumberValue.prototype) {
-            Object.defineProperty(N, method, {
-                value: NumberValue.prototype[method]
-            });
-        }
-        return N;
-    }
-    function wholeListNumeric(groups) {
-        var isNumeric = _.every(_.keys(groups), function(k) {
-            return      k === null ||
-                        k === undefined ||
-                        (!isNaN(Number(k))) ||
-                        ["null", ".", "undefined"].indexOf(k.toLowerCase()) > -1
-        });
-        if (isNumeric) {
-            _.each(_.keys(groups), function(k) {
-                if (isNaN(k)) {
-                    delete groups[k];        // getting rid of NULL values in dim list!!
-                }
-            });
-        }
-        return isNumeric;
-    }
-    var childProp = 'children';
+_This works exactly like Underscore's groupBy function (it uses it, in fact)
+but returns the resulting object of group values as an array and soups it up
+with (almost) everything you could ever want it and its values to do in subsequent
+operations._
+```
+var gradeBook = [
+   {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C+', num: 2.2},
+   {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
+   {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B-', num: 2.7},
+   {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'A'}];
 
-    /**
-     * Group records by a dimension
+var gradesByLastName = enlightenedData.group(gradeBook, 'lastName')
+
+var gradesByName = enlightenedData.group(gradeBook,  
+        function(d) { return d.lastName + ', ' + d.firstName },  
+        {dimName: 'fullName'})
+
+var sigfried = gradesByName.lookup('Gold, Sigfried');
+sigfried.records.length; // 3
+var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+rec.num }, 0) / sigfried.records.length;
+(it does much much more, will explain below)
+```
      *
-     * @param list Records to be grouped
-     * @param dim Dimension to group by
-     * @param opts
+     * @param {Object[]} list representing records to be grouped
+     * @param {String or Function} dim either the property name to
+        group by or a function returning a group by string
+     * @param {Object} opts 
+     * @param {String} opts.childProp='children' If group ends up being
+        * hierarchical, this will be the property name of any children
+     * @param {String[]} [opts.excludeValues] to exlude specific group values
+     * @param {function} [opts.preGroupRecsHook] run list through this
+        * function before continuing processing
+     * @param {function} [opts.dimName] defaults to the value of `dim`.
+        * If `dim` is a function, the dimName will be ugly.
+     * @return {Array} of `Value`s, the array has all the `Groups` methods
      *
-     * @memberof enlightenedData
+     *
      */
     e.group = function(list, dim, opts) {
         opts = opts || {};
@@ -163,8 +70,8 @@ var enlightenedData = (function() {
                 delete g[d];
             });
         }
-        // shouldn't do this automatically, especially after being
-        // able to specify type in opts
+        // if group values are entirely numeric or null-type values, make the 
+        // result a list of Numbers instead of a list of String
         var isNumeric = wholeListNumeric(g);
         var groups = _.map(_.pairs(g), function(pair, i) {
             var s = pair[0];
@@ -173,9 +80,6 @@ var enlightenedData = (function() {
                 val = makeNumberValue(s);
             } else {
                 val = makeStringValue(s);
-            }
-            if (opts.dataType) { // not sure if this is ever used
-                val = new opts.dataType(s);
             }
             val.records = e.addGroupMethods(pair[1]);
             val.dim = (opts.dimName) ? opts.dimName : dim;
@@ -269,6 +173,135 @@ var enlightenedData = (function() {
                     .value()
         return this.concat(_.flatten(_(this).invoke('descendants')));
     };
+    
+    function makeGroups(arr_arg) {
+        var arr = [ ];
+        arr.push.apply(arr, arr_arg);
+        //arr.__proto__ = Groups.prototype;
+        for(var method in Groups.prototype) {
+            Object.defineProperty(arr, method, {
+                value: Groups.prototype[method]
+            });
+        }
+        addUnderscoreMethods(arr);
+        return arr;
+    }
+
+    function addUnderscoreMethods(obj) {
+        _(e.underscoreMethods).each(function(methodName) {
+            if (_(obj).has(methodName)) return;
+            Object.defineProperty(obj, methodName, {
+                value: function() {
+                    var part = _.partial(_[methodName], obj)
+                    var result = part.apply(null, _.toArray(arguments));
+                    if (_.isArray(result)) e.addGroupMethods(result);
+                    return result;
+                }})
+        })
+    }
+    /** {@link http://underscorejs.org/ Underscore} functions that work on arrays get added as methods to Groups.
+     * When an underscore method returns an array, the returned array
+     * also gets extended with these methods
+     *
+     * @example
+     * group.where({foo:bar}).invoke('baz')
+     * @returns {whatever the underscore function would return}
+     *
+     * @memberof enlightenedData 
+     */
+    e.underscoreMethods = [ 
+            "each",
+            "map",
+            "reduce",
+            "find",
+            "filter",
+            "reject",
+            "all",
+            "every",
+            "any",
+            "some",
+            "contains",
+            "invoke",
+            "pluck",
+            "where",
+            "findWhere",
+            "max",
+            "min",
+            "shuffle",
+            "sortBy",
+            "groupBy",
+            "countBy",
+            "sortedIndex",
+            "size",
+            "first",
+            "initial",
+            "last",
+            "rest",
+            "compact",
+            "flatten",
+            "without",
+            "uniq",
+            "union",
+            "intersection",
+            "difference",
+            "zip",
+            "unzip",
+            //"object",
+            "indexOf",
+            "lastIndexOf",
+            "chain",
+            "result"
+            ];
+    function Value() {}
+    function makeValue(v_arg) {
+        if (isNaN(v_arg)) {
+            return makeStringValue(v_arg);
+        } else {
+            return makeNumberValue(v_arg);
+        }
+    }
+    function StringValue() {}
+    StringValue.prototype = new String;
+    function makeStringValue(s_arg) {
+        var S = new String(s_arg);
+        //S.__proto__ = StringValue.prototype;
+        for(var method in StringValue.prototype) {
+            Object.defineProperty(S, method, {
+                value: StringValue.prototype[method]
+            });
+        }
+        return S;
+    }
+    function NumberValue() {}
+    NumberValue.prototype = new Number;
+    function makeNumberValue(n_arg) {
+        var N = new Number(n_arg);
+        //N.__proto__ = NumberValue.prototype;
+        for(var method in NumberValue.prototype) {
+            Object.defineProperty(N, method, {
+                value: NumberValue.prototype[method]
+            });
+        }
+        return N;
+    }
+    function wholeListNumeric(groups) {
+        var isNumeric = _.every(_.keys(groups), function(k) {
+            return      k === null ||
+                        k === undefined ||
+                        (!isNaN(Number(k))) ||
+                        ["null", ".", "undefined"].indexOf(k.toLowerCase()) > -1
+        });
+        if (isNumeric) {
+            _.each(_.keys(groups), function(k) {
+                if (isNaN(k)) {
+                    delete groups[k];        // getting rid of NULL values in dim list!!
+                }
+            });
+        }
+        return isNumeric;
+    }
+    var childProp = 'children';
+
     Value.prototype.extendGroupBy = function(dim, opts) {
         _.each(this.leafNodes(), function(d) {
             opts.parent = d;
@@ -367,8 +400,8 @@ var enlightenedData = (function() {
 
     /** Summarize records by a dimension
      *
-     * @param list Records to be summarized
-     * @param numericDim Dimension to summarize by
+     * @param {list} Records to be summarized
+     * @param {numericDim} Dimension to summarize by
      *
      * @memberof enlightenedData
      */
@@ -386,10 +419,10 @@ var enlightenedData = (function() {
     }; 
     /** Compare groups across two similar root notes
      *
-     * @param from
-     * @param to
-     * @param dim
-     * @param opts
+     * @param {from} ...
+     * @param {to} ...
+     * @param {dim} ...
+     * @param {opts} ...
      *
      * used by treelike and some earlier code
      *
@@ -405,9 +438,9 @@ var enlightenedData = (function() {
 
     /** Compare two groups by a dimension
      *
-     * @param A
-     * @param B
-     * @param dim
+     * @param {A} ...
+     * @param {B} ...
+     * @param {dim} ...
      *
      * @memberof enlightenedData
      */
@@ -461,8 +494,8 @@ var enlightenedData = (function() {
 
     /** Concatenate two Values into a new one (??)
      *
-     * @param from
-     * @param to
+     * @param {from} ...
+     * @param {to} ...
      *
      * @memberof enlightenedData
      */
@@ -488,7 +521,7 @@ var enlightenedData = (function() {
      *  e.g., through slicing or sorting or filtering. 
      *  addGroupMethods turns it back into a Group
      *
-     * @param arr {Array} Array to be extended
+     * @param {Array} Array to be extended
      *
      * @memberof enlightenedData
      */
