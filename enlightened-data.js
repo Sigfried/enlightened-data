@@ -2,6 +2,8 @@
  * @file Defines the EnlightenedData structure
  * @author Sigfried Gold <sigfried@sigfried.org>
  * @license http://sigfried.mit-license.org/
+ * Don't trust this documentation yet. It's just beginning to be
+ * written.
  */
 
 'use strict';
