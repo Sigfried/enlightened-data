@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><title>groups.spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="groups.spec"><meta name="groc-project-path" content="test/groups.spec.js"><meta name="groc-github-url" content="https://github.com/Sigfried/enlightened-data"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Sigfried/enlightened-data/blob/master/test/groups.spec.js">test/groups.spec.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Groups&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">self</span><span class="p">.</span><span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">([]);</span>
+    <span class="p">});</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should apply Groups methods to arrays&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">rawValues</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">lookup</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">singleLookup</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">flattenTree</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+    <span class="p">});</span>
+
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;asRootVal&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should set its dimension as &quot;root&quot;&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">root</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">dim</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should assign its records to the current group&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">root</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">records</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">);</span>
+
+            <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="s1">&#39;herp&#39;</span><span class="p">]);</span>
+            <span class="nx">root</span> <span class="o">=</span> <span class="nx">groups</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">();</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">records</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">groups</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="nx">xit</span><span class="p">(</span><span class="s1">&#39;should set its name to a provided value, or &quot;Root&quot;&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>TODO: not at all sure how this works yet </p></div></div><div class="code"><div class="wrapper">        <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;rawValues&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">get_raw</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">groups</span><span class="p">.</span><span class="nx">rawValues</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should do nothing for empty arrays&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([])).</span><span class="nx">toEqual</span><span class="p">([]);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should do nothing for string arrays&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">])).</span><span class="nx">toEqual</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should turn numeric types into strings&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])).</span><span class="nx">toEqual</span><span class="p">([</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should turn boolean types into strings&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([</span><span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">])).</span><span class="nx">toEqual</span><span class="p">([</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;underscoreMethods&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//var arr;</span>
+        <span class="kd">function</span> <span class="nx">addMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">groups</span><span class="p">;</span>
+        <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>beforeEach(function() {
+    arr = addMethods([1,2,3]);
+    _(enlightenedData.underscoreMethods).each(function(method) {
+        spyOn(arr, method);
+        arr<a href="">method</a>;
+    })
+})</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add all the methods&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">addMethods</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]);</span>
+            <span class="nx">_</span><span class="p">(</span><span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">underscoreMethods</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">method</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">method</span><span class="p">]).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">);</span>
+            <span class="p">})</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">});</span></div></div></div></div></body></html>
