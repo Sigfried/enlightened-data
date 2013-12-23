@@ -2,11 +2,12 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     browserify: {
-      './dist/supergroup.js': [
-        './supergroup'
-        ,'./bower_components/underscore-unchained/src/underscore-unchained.js'
+      './dist/supergroupBundled.js': [
+        'bundle.js'
+        ,'./supergroup'
         ,'./bower_components/underscore/underscore-min.js'
         ,'./bower_components/1670507/underscoreAddon.js'
+        ,'./bower_components/underscore-unchained/src/underscore-unchained.js'
       ]
       , options: { 
             debug: true

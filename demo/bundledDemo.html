@@ -1,0 +1,20 @@
+<script src="./dist/supergroup.js"></script>
+<script>
+    console.log('hello')
+    var gradeBook = [
+    {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C+', num: 2.2},
+    {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
+    {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B-', num: 2.7},
+    {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'A'}];
+
+    var gradesByLastName = _.supergroup(gradeBook, 'lastName')
+
+    var gradesByName = _.supergroup(gradeBook,  
+            function(d) { return d.lastName + ', ' + d.firstName },  
+            {dimName: 'fullName'})
+
+    var sigfried = gradesByName.lookup('Gold, Sigfried');
+    sigfried.records.length; // 3
+    var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+rec.num }, 0) / sigfried.records.length;
+</script>
+
