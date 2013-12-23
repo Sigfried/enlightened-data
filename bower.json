@@ -1,6 +1,5 @@
 {
   "name": "supergroup",
-  "version": "0.1.0",
   "description": "A super-charged cross between d3.nest and underscore.groupBy tailored for D3 use. Returns an array of String or Number objects immediately usable as data, but having access to every piece of related data you could want.",
   "keywords": [
     "groups",
