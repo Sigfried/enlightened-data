@@ -65,6 +65,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
      *
      */
     e.group = function(list, dim, opts) {
+        if (_(dim).isArray()) return e.multiDimGroup(list, dim, opts);
         opts = opts || {};
         childProp = opts.childProp || childProp;
         var recs = opts.preGroupRecsHook ? opts.preGroupRecsHook(list) : list;
@@ -128,14 +129,27 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         //if (opts.postGroupGroupsHook) groups = opts.postGroupGroupsHook(groups);
         return groups;
     };
+    e.multiDimGroup = function(list, dims, opts) {
+        var g = e.group(list, dims[0], opts);
+        _.chain(dims).rest().each(function(dim) {
+            g.addLevel(dim, opts);
+        });
+        return g;
+    }
 
-    Groups.prototype.asRootVal = function(name) {
+    Groups.prototype.asRootVal = function(name, dimName) {
         name = name || 'Root';
         var val = makeValue(name);
-        val.records = e.addGroupMethods(this);
-        val.dim = 'root';
+        val.records = this; // is this wrong?
+        val[childProp]= this;
+        val.descendants().each(function(d) { d.depth = d.depth + 1 });
+        val.depth = 0;
+        val.dim = dimName || 'root';
         return val;
     };
+    Groups.prototype.leafNodes = function(level) {
+        return this.invoke('leafNodes').flatten();
+    }
     Groups.prototype.rawValues = function() {
         return _(this).map(function(d) { return d.toString(); });
     };
@@ -176,6 +190,11 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                     .tap(e.addGroupMethods)
                     .value();
     };
+    Groups.prototype.addLevel = function(dim, opts) {
+        _(this).each(function(val) {
+            val.addLevel(dim, opts);
+        });
+    }
     
     function makeGroups(arr_arg) {
         var arr = [ ];
@@ -186,7 +205,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                 value: Groups.prototype[method]
             });
         }
-        e.addUnderscoreMethods(arr);
+        _.unchain(arr);
         return arr;
     }
 
@@ -207,6 +226,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
      *
      * @memberof enlightenedData 
      */
+    /*
     e.addUnderscoreMethods = function(arr) {
         _(e.underscoreMethodsToAddToArrays).each(function(methodName) {
             if (_(arr).has(methodName)) return;
@@ -263,6 +283,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             "chain",
             "result"
             ];
+    */
     function Value() {}
     function makeValue(v_arg) {
         if (isNaN(v_arg)) {
@@ -313,7 +334,9 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
     }
     var childProp = 'children';
 
-    Value.prototype.extendGroupBy = function(dim, opts) {
+    Value.prototype.extendGroupBy = // backward compatibility
+    Value.prototype.addLevel = function(dim, opts) {
+        opts = opts || {};
         _.each(this.leafNodes(), function(d) {
             opts.parent = d;
             if (d.in && d.in === "both") {
@@ -332,10 +355,14 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
     };
     Value.prototype.leafNodes = function(level) {
         var ret = [this];
-        if (level !== 0 && this[childProp] && (!level || this.depth < level))
+        if (typeof level === "undefined") {
+            level = Infinity;
+        }
+        if (level !== 0 && this[childProp] && (!level || this.depth < level)) {
             ret = _.flatten(_.map(this[childProp], function(c) {
                 return c.leafNodes(level);
             }), true);
+        }
         return makeGroups(ret);
     };
     /*  didn't make this yet, just copied from above
@@ -537,7 +564,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                 value: Groups.prototype[method]
             });
         }
-        e.addUnderscoreMethods(arr);
+        _.unchain(arr);
         return arr;
     };
     return e;
