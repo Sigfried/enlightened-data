@@ -7,7 +7,11 @@ License: [MIT](http://sigfried.mit-license.org/)
 ### Don't trust this documentation yet. It's just beginning to be written.
  */
 
-'use strict';
+'use strict()';
+if (typeof(require) !== "undefined") {
+    _ = require('underscore'); // otherwise assume it was included by html file
+    var UU = require('underscore-unchained.js');
+}
 // @module enlightenedData
 // @public
 var enlightenedData = (function() {
@@ -18,7 +22,7 @@ var enlightenedData = (function() {
     * \_\_proto\_\_, so it pretends to be one instead.
     */
     function Groups() {}
-    Groups.prototype = new Array;  // not sure if this is still necessary
+    //Groups.prototype = new Array;  // not sure if this is still necessary
     /*
 ### Group records by a dimension
 
@@ -48,7 +52,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
      * @param {Object[]} list representing records to be grouped
      * @param {String or Function} dim either the property name to
         group by or a function returning a group by string
-     * @param {Object} opts 
+     * @param {Object} [opts]
      * @param {String} opts.childProp='children' If group ends up being
         * hierarchical, this will be the property name of any children
      * @param {String[]} [opts.excludeValues] to exlude specific group values
@@ -118,12 +122,12 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         groups.dim = (opts.dimName) ? opts.dimName : dim;
         groups.isNumeric = isNumeric;
         _(groups).each(function(g) { 
-            g.parentList = groups 
+            g.parentList = groups;
         });
         // pointless without recursion
         //if (opts.postGroupGroupsHook) groups = opts.postGroupGroupsHook(groups);
         return groups;
-    }
+    };
 
     Groups.prototype.asRootVal = function(name) {
         name = name || 'Root';
@@ -131,9 +135,9 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         val.records = e.addGroupMethods(this);
         val.dim = 'root';
         return val;
-    }
+    };
     Groups.prototype.rawValues = function() {
-        return _(this).map(function(d) { return d.toString() });
+        return _(this).map(function(d) { return d.toString(); });
     };
     Groups.prototype.lookup = function(query) {
         if (_.isArray(query)) {
@@ -170,8 +174,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                     .flatten()
                     .filter(_.identity) // expunge nulls
                     .tap(e.addGroupMethods)
-                    .value()
-        return this.concat(_.flatten(_(this).invoke('descendants')));
+                    .value();
     };
     
     function makeGroups(arr_arg) {
@@ -183,33 +186,41 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                 value: Groups.prototype[method]
             });
         }
-        addUnderscoreMethods(arr);
+        e.addUnderscoreMethods(arr);
         return arr;
     }
 
-    function addUnderscoreMethods(obj) {
-        _(e.underscoreMethods).each(function(methodName) {
-            if (_(obj).has(methodName)) return;
-            Object.defineProperty(obj, methodName, {
-                value: function() {
-                    var part = _.partial(_[methodName], obj)
-                    var result = part.apply(null, _.toArray(arguments));
-                    if (_.isArray(result)) e.addGroupMethods(result);
-                    return result;
-                }})
-        })
-    }
-    /** {@link http://underscorejs.org/ Underscore} functions that work on arrays get added as methods to Groups.
-     * When an underscore method returns an array, the returned array
-     * also gets extended with these methods
+    /** Enhance arrays with {@link http://underscorejs.org/ Underscore} functions 
+     * that work on arrays. 
+     * @param {Array} arr
+     * @return {Array} now enhanced
+     *
+     * Now can call Underscore functions as methods on the array, and if
+     * the return value is an array, it will also be enhanced.
      *
      * @example
+     * `enlightenedData.addUnderscoreMethods(['a','bb','ccc'])
+     *      .pluck('length')
+     *      .
      * group.where({foo:bar}).invoke('baz')
      * @returns {whatever the underscore function would return}
      *
      * @memberof enlightenedData 
      */
-    e.underscoreMethods = [ 
+    e.addUnderscoreMethods = function(arr) {
+        _(e.underscoreMethodsToAddToArrays).each(function(methodName) {
+            if (_(arr).has(methodName)) return;
+            Object.defineProperty(arr, methodName, {
+                value: function() {
+                    var part = _.partial(_[methodName], arr);
+                    var result = part.apply(null, _.toArray(arguments));
+                    if (_.isArray(result)) e.addGroupMethods(result);
+                    return result;
+                }});
+        });
+        return arr;
+    };
+    e.underscoreMethodsToAddToArrays = [ 
             "each",
             "map",
             "reduce",
@@ -261,9 +272,11 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         }
     }
     function StringValue() {}
-    StringValue.prototype = new String;
+    //StringValue.prototype = new String;
+    StringValue.prototype = String.prototype;
     function makeStringValue(s_arg) {
-        var S = new String(s_arg);
+        //var S = new String(s_arg);
+        var S = String(s_arg);
         //S.__proto__ = StringValue.prototype;
         for(var method in StringValue.prototype) {
             Object.defineProperty(S, method, {
@@ -273,9 +286,11 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         return S;
     }
     function NumberValue() {}
-    NumberValue.prototype = new Number;
+    //NumberValue.prototype = new Number;
+    NumberValue.prototype = Number.prototype;
     function makeNumberValue(n_arg) {
-        var N = new Number(n_arg);
+        var N = Number(n_arg);
+        //var N = new Number(n_arg);
         //N.__proto__ = NumberValue.prototype;
         for(var method in NumberValue.prototype) {
             Object.defineProperty(N, method, {
@@ -289,7 +304,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             return      k === null ||
                         k === undefined ||
                         (!isNaN(Number(k))) ||
-                        ["null", ".", "undefined"].indexOf(k.toLowerCase()) > -1
+                        ["null", ".", "undefined"].indexOf(k.toLowerCase()) > -1;
         });
         if (isNumeric) {
             _.each(_.keys(groups), function(k) {
@@ -362,7 +377,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         var path = [];
         if (!(opts && opts.notThis)) path.push(this);
         var ptr = this;
-        while (ptr = ptr.parent) {
+        while ((ptr = ptr.parent)) {
             path.unshift(ptr);
         }
         if (!(opts && opts.asValues)) return _(path).invoke('toString');
@@ -370,11 +385,6 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
     };
     Value.prototype.descendants = function(opts) {
         return this[childProp] ? this[childProp].flattenTree() : undefined;
-        return _.reduce(this[childProp],
-                function(desc, val) {
-                    return desc.concat(val.descendants())
-                },
-                []);
     };
     Value.prototype.lookup = function(query) {
         if (_.isArray(query)) {
@@ -414,8 +424,8 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                     memo.cnt++;
                     memo.avg=memo.sum/memo.cnt; 
                     memo.max = Math.max(memo.max, num);
-                    return memo
-                },{sum:0,cnt:0,max:-Infinity})
+                    return memo;
+                },{sum:0,cnt:0,max:-Infinity});
     }; 
     /** Compare groups across two similar root notes
      *
@@ -434,7 +444,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         var list = makeGroups(e.compare(fromGroup, toGroup, dim));
         list.dim = (opts && opts.dimName) ? opts.dimName : dim;
         return list;
-    }
+    };
 
     /** Compare two groups by a dimension
      *
@@ -445,8 +455,8 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
      * @memberof enlightenedData
      */
     e.compare = function(A, B, dim) {
-        var a = _(A).map(function(d) { return d+'' });
-        var b = _(B).map(function(d) { return d+'' });
+        var a = _(A).map(function(d) { return d+''; });
+        var b = _(B).map(function(d) { return d+''; });
         var comp = {};
         _(A).each(function(d, i) {
             comp[d+''] = {
@@ -454,8 +464,8 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                 in: 'from',
                 from: d,
                 fromIdx: i,
-                dim: dim,
-            }
+                dim: dim
+            };
         });
         _(B).each(function(d, i) {
             if ((d+'') in comp) {
@@ -469,8 +479,8 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                     in: 'to',
                     to: d,
                     toIdx: i,
-                    dim: dim,
-                }
+                    dim: dim
+                };
             }
         });
         var list = _(comp).values().sort(function(a,b) {
@@ -478,7 +488,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         }).map(function(d) {
             var val = makeValue(d.name);
             _.extend(val, d);
-            val.records = []
+            val.records = [];
             if ('from' in d)
                 val.records = val.records.concat(d.from.records);
             if ('to' in d)
@@ -490,7 +500,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             d.records.parentVal = d; // NOT TESTED, NOT USED, PROBABLY WRONG
         });
         return list;
-    }
+    };
 
     /** Concatenate two Values into a new one (??)
      *
@@ -531,8 +541,22 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                 value: Groups.prototype[method]
             });
         }
-        addUnderscoreMethods(arr);
+        e.addUnderscoreMethods(arr);
         return arr;
-    }
+    };
     return e;
 }());
+
+_.mixin({superGroup: enlightenedData.group});
+
+if (typeof exports !== 'undefined') {   // not sure if this is all right
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = _;
+    }
+    exports._ = _;
+} else if (typeof define === 'function' && define.amd) {
+    // Register as a named module with AMD.
+    define('_', [], function() {
+        return nester;
+    });
+}

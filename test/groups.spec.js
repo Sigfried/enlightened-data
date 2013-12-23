@@ -1,5 +1,6 @@
-'use strict';
+'use strict()';
 
+/* global: describe */
 describe('Groups', function() {
     var self = this;
 
@@ -76,7 +77,7 @@ describe('Groups', function() {
             var arr = addMethods([1,2,3]);
             _(enlightenedData.underscoreMethods).each(function(method) {
                 expect(typeof arr[method]).toEqual("function");
-            })
+            });
         });
     });
 });

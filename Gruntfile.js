@@ -23,7 +23,7 @@ module.exports = function(grunt) {
             "./supergroup.js", "README.md"
         ],
         options: {
-        "out": "doc/"
+            "out": "doc/"
         }
     },
     jshint: {
