@@ -11,25 +11,55 @@
         <script>
             $(function() {
                 var gradeBook = [
-                    {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C+', num: 2.2},
+                    {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C', num: 2},
                     {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
-                    {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B-', num: 2.7},
-                    {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'A'}];
+                    {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B', num: 3},
+                    {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'B', num:3}];
+                var tests = {
+                    "Group on one dimension": "gradesByLastName = _.supergroup(gradeBook, 'lastName')",
+                    "Perform calculation on the records of a group": "gradesByLastName.lookup('Gold').records.pluck('num').mean()",
+                    //"gradesByLastName.lookup('Gold').records.pluck('num').mean().mapScalar(function(d){return Math.round(d*10)/10;}).valueOf()",
+                    "Group on results of a function": "gradesByName = _.supergroup(gradeBook,  function(d) { return d.firstName + ' ' + d.lastName },  {dimName: 'fullName'})",
+                    "use .lookup() to retrieve value from supergroup array": "gradesByName.lookup('Sigfried Gold').records.pluck('class')",
+                    "Group on more than one dimension (returns top-level grouping)": "gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName'])",
+                    "Flatten nested groups": "gradesByGradeLastName.flattenTree()",
+                    "Path to nested values": "gradesByGradeLastName.flattenTree().invoke('namePath')",
+                    "Just for leaf nodes": "gradesByGradeLastName.leafNodes().invoke('namePath')"
+                };
+                _.unchain(tests);
 
+/*
                 $('body').append('<h3>gradeBook: </h3><pre>' + JSON.stringify(gradeBook,null,4) + '</pre>');
 
                 var gradesByLastName = _.supergroup(gradeBook, 'lastName')
+                $('body').append("<h3>var gradesByLastName = _.supergroup(gradeBook, 'lastName'): </h3><pre>" +
+                    JSON.stringify(gradesByLastName) + ' // these are String objects, if you need plain strings, use .rawValues()</pre>');
 
-                $('body').append("<h3>gradesByLastName = _.supergroup(gradeBook, 'lastName'): </h3><pre>" + JSON.stringify(gradesByLastName) + '</pre>');
-                $('body').append("<h3>gradesByLastName.lookup('Else').records: </h3><pre>" + JSON.stringify(gradesByLastName.lookup('Else').records,null,2) + '</pre>');
+                $('body').append("<h3>gradesByLastName.lookup('Gold').records.pluck('num').mean().mapScalar(function(d){return Math.round(d*10)/10;}).valueOf()",
+                    gradesByLastName.lookup('Gold').records.pluck('num').mean().mapScalar(function(d){return Math.round(d*10)/10;}).valueOf() + '</pre>');
+                $('body').append("<h3>gradesByLastName.lookup('Gold').records.pluck('num').mean()",
+                    gradesByLastName.lookup('Gold').records.pluck('num').mean() + '</pre>');
 
                 var gradesByName = _.supergroup(gradeBook,  
-                        function(d) { return d.lastName + ', ' + d.firstName },  
-                        {dimName: 'fullName'})
+                        function(d) { return d.firstName + ' ' + d.lastName },  
+                        {dimName: 'fullName'});
 
-                var sigfried = gradesByName.lookup('Gold, Sigfried');
-                sigfried.records.length; // 3
-                var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+rec.num }, 0) / sigfried.records.length;
+                $('body').append("<h3>var gradesByName = _.supergroup(gradeBook,  function(d) { return d.firstName + ' ' + d.lastName },  {dimName: 'fullName'});",
+                    JSON.stringify(gradesByName) + '</pre>');
+                $('body').append("<h3>gradesByName.lookup('Sigfried Gold').records.pluck('class'): </h3><pre>" + 
+                    JSON.stringify(gradesByName.lookup('Sigfried Gold').records.pluck('class'),null,2) + '</pre>');
+
+                var gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName'])
+                $('body').append("<h3>var gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName'])</h3><pre>" + 
+                     JSON.stringify(gradesByGradeLastName) + '</pre>');
+
+                $('body').append("<h3>gradesByGradeLastName.flattenTree()</h3><pre>" + 
+                     JSON.stringify(gradesByGradeLastName.flattenTree()) + '</pre>');
+                console.log(gradesByGradeLastName)
+*/
+                tests.pairs().each(function(d) {
+                    $('body').append("<h3>" + d[0] + "</h3><pre>" + d[1] + "\n=>  " + JSON.stringify(eval(d[1])) + '</pre>');
+                });
             });
         </script>
     </body>
