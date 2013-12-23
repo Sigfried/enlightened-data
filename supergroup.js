@@ -273,11 +273,9 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
     }
     function StringValue() {}
     //StringValue.prototype = new String;
-    StringValue.prototype = String.prototype;
     function makeStringValue(s_arg) {
-        //var S = new String(s_arg);
-        var S = String(s_arg);
-        //S.__proto__ = StringValue.prototype;
+        var S = new String(s_arg);
+        //S.__proto__ = StringValue.prototype; // won't work in IE10
         for(var method in StringValue.prototype) {
             Object.defineProperty(S, method, {
                 value: StringValue.prototype[method]
@@ -287,10 +285,8 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
     }
     function NumberValue() {}
     //NumberValue.prototype = new Number;
-    NumberValue.prototype = Number.prototype;
     function makeNumberValue(n_arg) {
-        var N = Number(n_arg);
-        //var N = new Number(n_arg);
+        var N = new Number(n_arg);
         //N.__proto__ = NumberValue.prototype;
         for(var method in NumberValue.prototype) {
             Object.defineProperty(N, method, {
@@ -547,7 +543,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
     return e;
 }());
 
-_.mixin({superGroup: enlightenedData.group});
+_.mixin({supergroup: enlightenedData.group});
 
 if (typeof exports !== 'undefined') {   // not sure if this is all right
     if (typeof module !== 'undefined' && module.exports) {
