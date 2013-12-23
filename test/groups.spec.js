@@ -1,20 +1,42 @@
 'use strict()';
 
 /* global: describe */
-describe('Groups', function() {
+describe('_.supergroup', function() {
     var self = this;
+    var gradeBook = [
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C', num: 2},
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B', num: 3},
+        {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'B', num:3}];
 
     beforeEach(function() {
-        self.groups = enlightenedData.addGroupMethods([]);
+        self.gradesByLastName = _.supergroup(gradeBook, 'lastName')
+        self.gradesByName = _.supergroup(gradeBook,  
+                function(d) { return d.firstName + ' ' + d.lastName },  
+                {dimName: 'fullName'});
+        self.gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName'])
+
+        self.groups = enlightenedData.addGroupMethods([]); // for tests Gemma wrote
     });
 
     it('should apply Groups methods to arrays', function() {
-        expect(self.groups.asRootVal).toBeDefined();
-        expect(self.groups.rawValues).toBeDefined();
-        expect(self.groups.lookup).toBeDefined();
-        expect(self.groups.singleLookup).toBeDefined();
-        expect(self.groups.flattenTree).toBeDefined();
+        expect(self.gradesByLastName.asRootVal).toBeDefined();
+        expect(self.gradesByLastName.rawValues).toBeDefined();
+        expect(self.gradesByLastName.lookup).toBeDefined();
+        expect(self.gradesByLastName.singleLookup).toBeDefined();
+        expect(self.gradesByLastName.flattenTree).toBeDefined();
+        // other methods ?
     });
+    it('should group stuff into an array', function() {
+        expect(JSON.stringify(self.gradesByLastName)).toEqual('["Gold","Else"]');
+        expect(JSON.stringify(self.gradesByName)).toEqual('["Sigfried Gold","Someone Else"]');
+        expect(JSON.stringify(self.gradesByGradeLastName.sort())).toEqual('["B","C"]');
+    });
+    it('should assign records to the right groups', function() {
+        expect(JSON.stringify(self.gradesByLastName[0].records)).toEqual(
+            '[{"firstName":"Sigfried","lastName":"Gold","class":"Remedial Programming","grade":"C","num":2},{"firstName":"Sigfried","lastName":"Gold","class":"Literary Posturing","grade":"B","num":3},{"firstName":"Sigfried","lastName":"Gold","class":"Documenting with Pretty Colors","grade":"B","num":3}]');
+    });
+
 
     describe('asRootVal', function() {
         it('should set its dimension as "root"', function() {

@@ -14,9 +14,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../node_modules/d3/d3.js',
-      '../node_modules/underscore/underscore.js',
-      '../enlightened-data.js',
+      //'../node_modules/d3/d3.js',
+      '../bower_components/underscore/underscore.js',
+      '../bower_components/1670507/underscoreAddon.js',
+      '../bower_components/underscore-unchained/src/underscore-unchained.js',
+      '../supergroup.js',
       '*.js'
     ],
 
