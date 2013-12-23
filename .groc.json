@@ -1,6 +1,6 @@
 {
-  "glob": ["enlightened-data.js", "README.md", "test/*.js"],
+  "glob": ["supergroup.js", "README.md", "test/*.js"],
   "github": false,
-  "repository-url": "https://github.com/Sigfried/enlightened-data",
-  "index": "enlightened-data.js"
+  "repository-url": "https://github.com/Sigfried/supergroup",
+  "index": "supergroup.js"
 }

@@ -1,5 +1,5 @@
 {
-  "name": "englightened-data",
+  "name": "supergroup",
   "version": "0.0.1",
   "description": "Nested groups on arrays of objects where groups are Strings that know what you want them to know about themselves and their relatives.",
   "keywords": [
@@ -18,11 +18,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:Sigfried/enlightened-data.git"
+    "url": "git@github.com:Sigfried/supergroup.git"
   },
   "dependencies": {
     "d3": "3.1.6",
     "underscore": "1.4.4",
+    "underscore-unchained": "~0.1.0",
     "groc":"0.6.1"
   },
   "devDependencies": {
