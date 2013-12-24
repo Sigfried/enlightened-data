@@ -17,8 +17,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "foldPrefix": "^",
           "name": "JavaScript"
         },
-        "sourcePath": "/Users/sigfried/Sites/enlightened-data/enlightened-data.js",
-        "projectPath": "enlightened-data.js",
+        "sourcePath": "/Users/sigfried/Sites/supergroup/supergroup.js",
+        "projectPath": "supergroup.js",
         "targetPath": "index",
         "pageTitle": "index",
         "firstHeader": {
@@ -80,7 +80,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "commentsOnly": true,
           "name": "Markdown"
         },
-        "sourcePath": "/Users/sigfried/Sites/enlightened-data/README.md",
+        "sourcePath": "/Users/sigfried/Sites/supergroup/README.md",
         "projectPath": "README.md",
         "targetPath": "README",
         "pageTitle": "README",
@@ -110,7 +110,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "foldPrefix": "^",
           "name": "JavaScript"
         },
-        "sourcePath": "/Users/sigfried/Sites/enlightened-data/test/groups.spec.js",
+        "sourcePath": "/Users/sigfried/Sites/supergroup/test/groups.spec.js",
         "projectPath": "test/groups.spec.js",
         "targetPath": "groups.spec",
         "pageTitle": "groups.spec",
@@ -130,7 +130,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "foldPrefix": "^",
           "name": "JavaScript"
         },
-        "sourcePath": "/Users/sigfried/Sites/enlightened-data/test/karma.conf.js",
+        "sourcePath": "/Users/sigfried/Sites/supergroup/test/karma.conf.js",
         "projectPath": "test/karma.conf.js",
         "targetPath": "karma.conf",
         "pageTitle": "karma.conf",
