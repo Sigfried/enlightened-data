@@ -9,81 +9,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
       "type": "file",
       "data": {
         "language": {
-          "nameMatchers": [".js"],
-          "pygmentsLexer": "javascript",
-          "multiLineComment": ["/*", "*", "*/"],
-          "singleLineComment": ["//"],
-          "ignorePrefix": "}",
-          "foldPrefix": "^",
-          "name": "JavaScript"
-        },
-        "sourcePath": "/Users/sigfried/Sites/supergroup/supergroup.js",
-        "projectPath": "supergroup.js",
-        "targetPath": "index",
-        "pageTitle": "index",
-        "firstHeader": {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "enlightened-data.js",
-            "slug": "enlightened-datajs",
-            "isFileHeader": true
-          },
-          "depth": 1,
-          "children": [
-            {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Don't trust this documentation yet. It's just beginning to be written.",
-                "slug": "dont-trust-this-documentation-yet-its-just-beginning-to-be-written"
-              },
-              "depth": 3
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Group records by a dimension",
-                "slug": "group-records-by-a-dimension"
-              },
-              "depth": 3
-            }
-          ]
-        },
-        "title": "enlightened-data.js"
-      },
-      "depth": 1,
-      "outline": [
-        {
-          "type": "heading",
-          "data": {
-            "level": 3,
-            "title": "Don't trust this documentation yet. It's just beginning to be written.",
-            "slug": "dont-trust-this-documentation-yet-its-just-beginning-to-be-written"
-          },
-          "depth": 3
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 3,
-            "title": "Group records by a dimension",
-            "slug": "group-records-by-a-dimension"
-          },
-          "depth": 3
-        }
-      ]
-    }, {
-      "type": "file",
-      "data": {
-        "language": {
           "nameMatchers": [".md"],
           "commentsOnly": true,
           "name": "Markdown"
         },
         "sourcePath": "/Users/sigfried/Sites/supergroup/README.md",
         "projectPath": "README.md",
-        "targetPath": "README",
-        "pageTitle": "README",
+        "targetPath": "index",
+        "pageTitle": "index",
         "firstHeader": {
           "type": "heading",
           "data": {
@@ -138,6 +71,73 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
       },
       "depth": 1,
       "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/sigfried/Sites/supergroup/supergroup.js",
+        "projectPath": "supergroup.js",
+        "targetPath": "supergroup",
+        "pageTitle": "supergroup",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "enlightened-data.js",
+            "slug": "enlightened-datajs",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Don't trust this documentation yet. It's just beginning to be written.",
+                "slug": "dont-trust-this-documentation-yet-its-just-beginning-to-be-written"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Group records by a dimension",
+                "slug": "group-records-by-a-dimension"
+              },
+              "depth": 3
+            }
+          ]
+        },
+        "title": "enlightened-data.js"
+      },
+      "depth": 1,
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 3,
+            "title": "Don't trust this documentation yet. It's just beginning to be written.",
+            "slug": "dont-trust-this-documentation-yet-its-just-beginning-to-be-written"
+          },
+          "depth": 3
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 3,
+            "title": "Group records by a dimension",
+            "slug": "group-records-by-a-dimension"
+          },
+          "depth": 3
+        }
+      ]
     }
   ];
 
