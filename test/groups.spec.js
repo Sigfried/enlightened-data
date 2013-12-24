@@ -10,11 +10,11 @@ describe('_.supergroup', function() {
         {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'B', num:3}];
 
     beforeEach(function() {
-        self.gradesByLastName = _.supergroup(gradeBook, 'lastName')
+        self.gradesByLastName = _.supergroup(gradeBook, 'lastName');
         self.gradesByName = _.supergroup(gradeBook,  
-                function(d) { return d.firstName + ' ' + d.lastName },  
+                function(d) { return d.firstName + ' ' + d.lastName; },  
                 {dimName: 'fullName'});
-        self.gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName'])
+        self.gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName']);
 
         self.groups = enlightenedData.addGroupMethods([]); // for tests Gemma wrote
     });

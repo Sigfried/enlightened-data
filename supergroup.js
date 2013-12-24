@@ -6,11 +6,13 @@ License: [MIT](http://sigfried.mit-license.org/)
 
 ### Don't trust this documentation yet. It's just beginning to be written.
  */
+/* jshint -W053 */
 
 'use strict()';
 if (typeof(require) !== "undefined") {
     _ = require('underscore'); // otherwise assume it was included by html file
-    var UU = require('underscore-unchained.js');
+    var UU = require('underscore-unchained');
+    var addOn = require('1670507/underscoreAddon.js');
 }
 // @module enlightenedData
 // @public
@@ -135,21 +137,21 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             g.addLevel(dim, opts);
         });
         return g;
-    }
+    };
 
     Groups.prototype.asRootVal = function(name, dimName) {
         name = name || 'Root';
         var val = makeValue(name);
         val.records = this; // is this wrong?
         val[childProp]= this;
-        val.descendants().each(function(d) { d.depth = d.depth + 1 });
+        val.descendants().each(function(d) { d.depth = d.depth + 1; });
         val.depth = 0;
         val.dim = dimName || 'root';
         return val;
     };
     Groups.prototype.leafNodes = function(level) {
         return this.invoke('leafNodes').flatten();
-    }
+    };
     Groups.prototype.rawValues = function() {
         return _(this).map(function(d) { return d.toString(); });
     };
@@ -194,7 +196,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         _(this).each(function(val) {
             val.addLevel(dim, opts);
         });
-    }
+    };
     
     function makeGroups(arr_arg) {
         var arr = [ ];
