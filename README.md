@@ -4,7 +4,7 @@ enlightened-data
 Author: [Sigfried Gold](http://sigfried.org)  
 License: [MIT](http://sigfried.mit-license.org/)  
 
-```
+~~~ javascript
 var gradeBook = [
    {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C+', num: 2.2},
    {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
@@ -21,4 +21,4 @@ var sigfried = gradesByName.lookup('Gold, Sigfried');
 sigfried.records.length; // 3
 var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+rec.num }, 0) / sigfried.records.length;
 (it does much much more, will explain below)
-```
+~~~
