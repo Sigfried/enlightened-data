@@ -162,7 +162,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             var list = this;
             var ret;
             while(values.length) {
-                ret = this.singleLookup(values.shift());
+                ret = list.singleLookup(values.shift());
                 list = ret[childProp];
             }
             return ret;
@@ -377,18 +377,25 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         return makeGroups(ret);
     };
     */
-    Value.prototype.dimPath = function() {
-        return (this.parent ? this.parent.dimPath() + '/' : '') +
-            (this.dim === 'Root' ? '' : this.dim);
+    function delimOpts(opts) {
+        if (typeof opts === "string") opts = {delim: opts};
+        opts = opts || {};
+        if (!_(opts).has('delim')) opts.delim = '/';
+        return opts;
+    }
+    Value.prototype.dimPath = function(opts) {
+        opts = delimOpts(opts);
+        opts.dimName = true;
+        return this.namePath(opts);
     };
     Value.prototype.namePath = function(opts) {
-        opts = opts || {};
+        opts = delimOpts(opts);
         var path = this.pedigree(opts);
         if (opts.noRoot) path.shift();
         if (opts.backwards || this.backwards) path.reverse(); //kludgy?
+        if (opts.dimName) path = _(path).pluck('dim');
         if (opts.asArray) return path;
-        if (_(opts).has('delim')) return path.join(delim);
-        return path.join('/');
+        return path.join(opts.delim);
         /*
         var delim = opts.delim || '/';
         return (this.parent ? 
@@ -405,6 +412,9 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         while ((ptr = ptr.parent)) {
             path.unshift(ptr);
         }
+        return path;
+        // CHANGING -- HOPE THIS DOESN'T BREAK STUFF (pedigree isn't
+        // documented yet)
         if (!(opts && opts.asValues)) return _(path).invoke('toString');
         return path;
     };
