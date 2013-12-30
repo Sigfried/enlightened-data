@@ -1,54 +1,60 @@
-<!DOCTYPE html><html lang="en"><head><title>groups.spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="groups.spec"><meta name="groc-project-path" content="test/groups.spec.js"><meta name="groc-github-url" content="https://github.com/Sigfried/supergroup"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Sigfried/supergroup/blob/master/test/groups.spec.js">test/groups.spec.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict()&#39;</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>global: describe </p></div></div><div class="code"><div class="wrapper"><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;_.supergroup&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">gradeBook</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span><span class="nx">firstName</span><span class="o">:</span> <span class="s1">&#39;Sigfried&#39;</span><span class="p">,</span> <span class="nx">lastName</span><span class="o">:</span> <span class="s1">&#39;Gold&#39;</span><span class="p">,</span> <span class="kr">class</span><span class="o">:</span> <span class="s1">&#39;Remedial Programming&#39;</span><span class="p">,</span> <span class="nx">grade</span><span class="o">:</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="nx">num</span><span class="o">:</span> <span class="mi">2</span><span class="p">},</span>
-        <span class="p">{</span><span class="nx">firstName</span><span class="o">:</span> <span class="s1">&#39;Sigfried&#39;</span><span class="p">,</span> <span class="nx">lastName</span><span class="o">:</span> <span class="s1">&#39;Gold&#39;</span><span class="p">,</span> <span class="kr">class</span><span class="o">:</span> <span class="s1">&#39;Literary Posturing&#39;</span><span class="p">,</span> <span class="nx">grade</span><span class="o">:</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="nx">num</span><span class="o">:</span> <span class="mi">3</span><span class="p">},</span>
-        <span class="p">{</span><span class="nx">firstName</span><span class="o">:</span> <span class="s1">&#39;Sigfried&#39;</span><span class="p">,</span> <span class="nx">lastName</span><span class="o">:</span> <span class="s1">&#39;Gold&#39;</span><span class="p">,</span> <span class="kr">class</span><span class="o">:</span> <span class="s1">&#39;Documenting with Pretty Colors&#39;</span><span class="p">,</span> <span class="nx">grade</span><span class="o">:</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="nx">num</span><span class="o">:</span> <span class="mi">3</span><span class="p">},</span>
-        <span class="p">{</span><span class="nx">firstName</span><span class="o">:</span> <span class="s1">&#39;Someone&#39;</span><span class="p">,</span> <span class="nx">lastName</span><span class="o">:</span> <span class="s1">&#39;Else&#39;</span><span class="p">,</span> <span class="kr">class</span><span class="o">:</span> <span class="s1">&#39;Remedial Programming&#39;</span><span class="p">,</span> <span class="nx">grade</span><span class="o">:</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="nx">num</span><span class="o">:</span><span class="mi">3</span><span class="p">}];</span>
+<!DOCTYPE html><html lang="en" class="two-column-layout"><head><title>groups.spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="groups.spec"><meta name="groc-project-path" content="test/groups.spec.js"><meta name="groc-github-url" content="https://github.com/Sigfried/supergroup"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/Sigfried/supergroup/blob/master/test/groups.spec.js">test/groups.spec.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict()&#39;</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>global: describe */
+describe('_.supergroup', function() {
+    var self = this;
+    var gradeBook = [
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C', num: 2},
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B', num: 3},
+        {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'B', num:3}];</p>
 
-    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">supergroup</span><span class="p">(</span><span class="nx">gradeBook</span><span class="p">,</span> <span class="s1">&#39;lastName&#39;</span><span class="p">);</span>
-        <span class="nx">self</span><span class="p">.</span><span class="nx">gradesByName</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">supergroup</span><span class="p">(</span><span class="nx">gradeBook</span><span class="p">,</span>  
-                <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span> <span class="p">},</span>  
-                <span class="p">{</span><span class="nx">dimName</span><span class="o">:</span> <span class="s1">&#39;fullName&#39;</span><span class="p">});</span>
-        <span class="nx">self</span><span class="p">.</span><span class="nx">gradesByGradeLastName</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">supergroup</span><span class="p">(</span><span class="nx">gradeBook</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;grade&#39;</span><span class="p">,</span><span class="s1">&#39;lastName&#39;</span><span class="p">]);</span>
+<pre><code>beforeEach(function() {
+    self.gradesByLastName = _.supergroup(gradeBook, 'lastName');
+    self.gradesByName = _.supergroup(gradeBook,  
+            function(d) { return d.firstName + ' ' + d.lastName; },  
+            {dimName: 'fullName'});
+    self.gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName']);
 
-        <span class="nx">self</span><span class="p">.</span><span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">([]);</span> <span class="c1">// for tests Gemma wrote</span>
-    <span class="p">});</span>
+    self.groups = enlightenedData.addGroupMethods([]); // for tests Gemma wrote
+});
 
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should apply Groups methods to arrays&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span><span class="p">.</span><span class="nx">rawValues</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span><span class="p">.</span><span class="nx">lookup</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span><span class="p">.</span><span class="nx">singleLookup</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span><span class="p">.</span><span class="nx">flattenTree</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>other methods ?</p></div></div><div class="code"><div class="wrapper">    <span class="p">});</span>
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should group stuff into an array&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;[&quot;Gold&quot;,&quot;Else&quot;]&#39;</span><span class="p">);</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByName</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;[&quot;Sigfried Gold&quot;,&quot;Someone Else&quot;]&#39;</span><span class="p">);</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByGradeLastName</span><span class="p">.</span><span class="nx">sort</span><span class="p">())).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;[&quot;B&quot;,&quot;C&quot;]&#39;</span><span class="p">);</span>
-    <span class="p">});</span>
-    <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should assign records to the right groups&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">gradesByLastName</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">records</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span>
-            <span class="s1">&#39;[{&quot;firstName&quot;:&quot;Sigfried&quot;,&quot;lastName&quot;:&quot;Gold&quot;,&quot;class&quot;:&quot;Remedial Programming&quot;,&quot;grade&quot;:&quot;C&quot;,&quot;num&quot;:2},{&quot;firstName&quot;:&quot;Sigfried&quot;,&quot;lastName&quot;:&quot;Gold&quot;,&quot;class&quot;:&quot;Literary Posturing&quot;,&quot;grade&quot;:&quot;B&quot;,&quot;num&quot;:3},{&quot;firstName&quot;:&quot;Sigfried&quot;,&quot;lastName&quot;:&quot;Gold&quot;,&quot;class&quot;:&quot;Documenting with Pretty Colors&quot;,&quot;grade&quot;:&quot;B&quot;,&quot;num&quot;:3}]&#39;</span><span class="p">);</span>
-    <span class="p">});</span>
+it('should apply Groups methods to arrays', function() {
+    expect(self.gradesByLastName.asRootVal).toBeDefined();
+    expect(self.gradesByLastName.rawValues).toBeDefined();
+    expect(self.gradesByLastName.lookup).toBeDefined();
+    expect(self.gradesByLastName.singleLookup).toBeDefined();
+    expect(self.gradesByLastName.flattenTree).toBeDefined();
+    // other methods ?
+});
+it('should group stuff into an array', function() {
+    expect(JSON.stringify(self.gradesByLastName)).toEqual('["Gold","Else"]');
+    expect(JSON.stringify(self.gradesByName)).toEqual('["Sigfried Gold","Someone Else"]');
+    expect(JSON.stringify(self.gradesByGradeLastName.sort())).toEqual('["B","C"]');
+});
+it('should assign records to the right groups', function() {
+    expect(JSON.stringify(self.gradesByLastName[0].records)).toEqual(
+        '[{"firstName":"Sigfried","lastName":"Gold","class":"Remedial Programming","grade":"C","num":2},{"firstName":"Sigfried","lastName":"Gold","class":"Literary Posturing","grade":"B","num":3},{"firstName":"Sigfried","lastName":"Gold","class":"Documenting with Pretty Colors","grade":"B","num":3}]');
+});
 
 
-    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;asRootVal&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should set its dimension as &quot;root&quot;&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">root</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">dim</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">);</span>
-        <span class="p">});</span>
+describe('asRootVal', function() {
+    it('should set its dimension as "root"', function() {
+        var root = self.groups.asRootVal();
+        expect(root.dim).toBe('root');
+    });
 
-        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should assign its records to the current group&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">root</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">records</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">groups</span><span class="p">);</span>
+    it('should assign its records to the current group', function() {
+        var root = self.groups.asRootVal();
+        expect(root.records).toEqual(self.groups);
 
-            <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="s1">&#39;herp&#39;</span><span class="p">]);</span>
-            <span class="nx">root</span> <span class="o">=</span> <span class="nx">groups</span><span class="p">.</span><span class="nx">asRootVal</span><span class="p">();</span>
-            <span class="nx">expect</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">records</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">groups</span><span class="p">);</span>
-        <span class="p">});</span>
+        var groups = enlightenedData.addGroupMethods([1, 2, true, 'herp']);
+        root = groups.asRootVal();
+        expect(root.records).toEqual(groups);
+    });
 
-        <span class="nx">xit</span><span class="p">(</span><span class="s1">&#39;should set its name to a provided value, or &quot;Root&quot;&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>TODO: not at all sure how this works yet </p></div></div><div class="code"><div class="wrapper">        <span class="p">});</span>
+    xit('should set its name to a provided value, or "Root"', function() {
+</code></pre>
+
+<p>TODO: not at all sure how this works yet </p></div></div><div class="code"><div class="wrapper">        <span class="p">});</span>
     <span class="p">});</span>
 
     <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;rawValues&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -78,13 +84,14 @@
         <span class="kd">function</span> <span class="nx">addMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">);</span>
             <span class="k">return</span> <span class="nx">groups</span><span class="p">;</span>
-        <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>beforeEach(function() {
-    arr = addMethods([1,2,3]);
-    _(enlightenedData.underscoreMethods).each(function(method) {
-        spyOn(arr, method);
-        arr<a href="">method</a>;
+        <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>    beforeEach(function() {
+        arr = addMethods([1,2,3]);
+        _(enlightenedData.underscoreMethods).each(function(method) {
+            spyOn(arr, method);
+            arr[method]();
+        })
     })
-})</p></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add all the methods&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</code></pre></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add all the methods&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">addMethods</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]);</span>
             <span class="nx">_</span><span class="p">(</span><span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">underscoreMethods</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">method</span><span class="p">)</span> <span class="p">{</span>
                 <span class="nx">expect</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">method</span><span class="p">]).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">);</span>
