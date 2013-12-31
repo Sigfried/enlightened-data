@@ -1,94 +1,68 @@
 /*
-# enlightened-data.js
-
-Author: [Sigfried Gold](http://sigfried.org)  
-License: [MIT](http://sigfried.mit-license.org/)  
-
-### Don't trust this documentation yet. It's just beginning to be written.
+ * # supergroup.js
+ * Author: [Sigfried Gold](http://sigfried.org)  
+ * License: [MIT](http://sigfried.mit-license.org/)  
+ *
+ * usage examples at [http://sigfried.github.io/blog/supergroup](http://sigfried.github.io/blog/supergroup)
  */
-/* jshint -W053 */
+; // jshint -W053
 
 'use strict()';
-if (typeof(require) !== "undefined") {
+if (typeof(require) !== "undefined") { // make it work in node or browsers or other contexts
     _ = require('underscore'); // otherwise assume it was included by html file
-    var UU = require('underscore-unchained');
-    var addOn = require('1670507/underscoreAddon.js');
+    require('underscore-unchained'); // adds unchain as an Underscore mixin
+    require('1670507/underscoreAddon.js'); // adds mean, median, etc. as mixins
 }
-// @module enlightenedData
-// @public
-var enlightenedData = (function() {
-    var e = {};
+var supergroup = (function() {
+    var e = {}; // local reference to supergroup namespace
+    // @class List
+    // @description Native Array of groups with various added methods and properties.
+    // Methods described below.
+    function List() {}
+    // @class Value
+    // @description Supergroup Lists are composed of Values which are
+    // String or Number objects representing group values.
+    // Methods described below.
+    function Value() {}
 
-    /*
-    * `Groups` would be a constructor if IE10 supported
-    * \_\_proto\_\_, so it pretends to be one instead.
-    */
-    function Groups() {}
-    //Groups.prototype = new Array;  // not sure if this is still necessary
-    /*
-### Group records by a dimension
-
-_This works exactly like Underscore's groupBy function (it uses it, in fact)
-but returns the resulting object of group values as an array and soups it up
-with (almost) everything you could ever want it and its values to do in subsequent
-operations._
-```
-var gradeBook = [
-   {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C+', num: 2.2},
-   {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
-   {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B-', num: 2.7},
-   {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'A'}];
-
-var gradesByLastName = enlightenedData.group(gradeBook, 'lastName')
-
-var gradesByName = enlightenedData.group(gradeBook,  
-        function(d) { return d.lastName + ', ' + d.firstName },  
-        {dimName: 'fullName'})
-
-var sigfried = gradesByName.lookup('Gold, Sigfried');
-sigfried.records.length; // 3
-var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+rec.num }, 0) / sigfried.records.length;
-(it does much much more, will explain below)
-```
-     *
-     * @param {Object[]} list representing records to be grouped
-     * @param {String or Function} dim either the property name to
-        group by or a function returning a group by string
+    /* @exported function supergroup.group(recs, dim, opts)
+     * @param {Object[]} recs list of records to be grouped
+     * @param {string or Function} dim either the property name to
+        group by or a function returning a group by string or number
      * @param {Object} [opts]
      * @param {String} opts.childProp='children' If group ends up being
         * hierarchical, this will be the property name of any children
      * @param {String[]} [opts.excludeValues] to exlude specific group values
-     * @param {function} [opts.preGroupRecsHook] run list through this
+     * @param {function} [opts.preListRecsHook] run recs through this
         * function before continuing processing
      * @param {function} [opts.dimName] defaults to the value of `dim`.
         * If `dim` is a function, the dimName will be ugly.
-     * @return {Array} of `Value`s, the array has all the `Groups` methods
-     *
-     *
+     * @return {Array of Values} enhanced with all the List methods
      */
-    e.group = function(list, dim, opts) {
-        if (_(dim).isArray()) return e.multiDimGroup(list, dim, opts);
+    e.group = function(recs, dim, opts) {
+        if (_(dim).isArray()) return e.multiDimList(recs, dim, opts); // handoff to multiDimmList if dim is an array
         opts = opts || {};
+        recs = opts.preListRecsHook ? opts.preListRecsHook(recs) : recs;
         childProp = opts.childProp || childProp;
-        var recs = opts.preGroupRecsHook ? opts.preGroupRecsHook(list) : list;
-        var g = _.groupBy(recs, dim);   // dim can be a function
+        var groups = _.groupBy(recs, dim); // use Underscore's groupBy: http://underscorejs.org/#groupBy
         if (opts.excludeValues) {
             _(opts.excludeValues).each(function(d) {
-                delete g[d];
+                delete groups[d];
             });
         }
-        // if group values are entirely numeric or null-type values, make the 
-        // result a list of Numbers instead of a list of String
-        var isNumeric = wholeListNumeric(g);
-        var groups = _.map(_.pairs(g), function(pair, i) {
-            var s = pair[0];
+        var isNumeric = wholeListNumeric(groups); // does every group Value look like a number or a missing value?
+        var groups = _.map(_.pairs(groups), function(pair, i) { // setup Values for each group in List
+            var rawVal = pair[0];
             var val;
             if(isNumeric) {
-                val = makeNumberValue(s);
+                val = makeNumberValue(rawVal); // either everything's a Number
             } else {
-                val = makeStringValue(s);
+                val = makeStringValue(rawVal); // or everything's a String
             }
-            val.records = e.addGroupMethods(pair[1]);
+            /* The original records in this group are stored as an Array in 
+             * the records property (should probably be a getter method).
+             */
+            val.records = e.addListMethods(pair[1]);
             val.dim = (opts.dimName) ? opts.dimName : dim;
             val.records.parentVal = val; // NOT TESTED, NOT USED, PROBABLY WRONG
             if (opts.parent)
@@ -105,41 +79,26 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             }
             return val;
         });
-        /*      moving recursion out to to the caler...
-        if (opts.recurse) {
-            groups = _(groups).map(function(g) { 
-                if (childProp in g)
-                    throw new Error(g + ' already has ' + childProp);
-                g.depth = g.parent && g.parent.depth + 1 || 0;
-                opts.parent = g;
-                if (g.records.length) {
-                    g[childProp] = e.group(g.records, dim, opts);
-                }
-                //if (opts.postGroupValHook) g = opts.postGroupValHook(g);
-                return g;
-            });
-        }
-        */
-        groups = makeGroups(groups);
-        groups.records = list; // NOT TESTED, NOT USED, PROBABLY WRONG
+        groups = makeList(groups);
+        groups.records = recs; // NOT TESTED, NOT USED, PROBABLY WRONG
         groups.dim = (opts.dimName) ? opts.dimName : dim;
         groups.isNumeric = isNumeric;
-        _(groups).each(function(g) { 
-            g.parentList = groups;
+        _(groups).each(function(group) { 
+            group.parentList = groups;
         });
         // pointless without recursion
-        //if (opts.postGroupGroupsHook) groups = opts.postGroupGroupsHook(groups);
+        //if (opts.postListListHook) groups = opts.postListListHook(groups);
         return groups;
     };
-    e.multiDimGroup = function(list, dims, opts) {
-        var g = e.group(list, dims[0], opts);
+    e.multiDimList = function(recs, dims, opts) {
+        var groups = e.group(recs, dims[0], opts);
         _.chain(dims).rest().each(function(dim) {
-            g.addLevel(dim, opts);
+            groups.addLevel(dim, opts);
         });
-        return g;
+        return groups;
     };
 
-    Groups.prototype.asRootVal = function(name, dimName) {
+    List.prototype.asRootVal = function(name, dimName) {
         name = name || 'Root';
         var val = makeValue(name);
         val.records = this; // is this wrong?
@@ -149,13 +108,13 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         val.dim = dimName || 'root';
         return val;
     };
-    Groups.prototype.leafNodes = function(level) {
+    List.prototype.leafNodes = function(level) {
         return this.invoke('leafNodes').flatten();
     };
-    Groups.prototype.rawValues = function() {
+    List.prototype.rawValues = function() {
         return _(this).map(function(d) { return d.toString(); });
     };
-    Groups.prototype.lookup = function(query) {
+    List.prototype.lookup = function(query) {
         if (_.isArray(query)) {
             // if group has children, can search down the tree
             var values = query.slice(0);
@@ -170,7 +129,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             return this.singleLookup(query);
         }
     };
-    Groups.prototype.singleLookup = function(query) {
+    List.prototype.singleLookup = function(query) {
         var that = this;
         if (! ('lookupMap' in this)) {
             this.lookupMap = {};
@@ -181,7 +140,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         if (query in this.lookupMap)
             return this.lookupMap[query];
     };
-    Groups.prototype.flattenTree = function() {
+    List.prototype.flattenTree = function() {
         return _.chain(this)
                     .map(function(d) {
                         var desc = d.descendants();
@@ -189,22 +148,22 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                     })
                     .flatten()
                     .filter(_.identity) // expunge nulls
-                    .tap(e.addGroupMethods)
+                    .tap(e.addListMethods)
                     .value();
     };
-    Groups.prototype.addLevel = function(dim, opts) {
+    List.prototype.addLevel = function(dim, opts) {
         _(this).each(function(val) {
             val.addLevel(dim, opts);
         });
     };
     
-    function makeGroups(arr_arg) {
+    function makeList(arr_arg) {
         var arr = [ ];
         arr.push.apply(arr, arr_arg);
-        //arr.__proto__ = Groups.prototype;
-        for(var method in Groups.prototype) {
+        //arr.__proto__ = List.prototype;
+        for(var method in List.prototype) {
             Object.defineProperty(arr, method, {
-                value: Groups.prototype[method]
+                value: List.prototype[method]
             });
         }
         _.unchain(arr);
@@ -236,7 +195,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                 value: function() {
                     var part = _.partial(_[methodName], arr);
                     var result = part.apply(null, _.toArray(arguments));
-                    if (_.isArray(result)) e.addGroupMethods(result);
+                    if (_.isArray(result)) e.addListMethods(result);
                     return result;
                 }});
         });
@@ -286,7 +245,6 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             "result"
             ];
     */
-    function Value() {}
     function makeValue(v_arg) {
         if (isNaN(v_arg)) {
             return makeStringValue(v_arg);
@@ -342,7 +300,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
         _.each(this.leafNodes(), function(d) {
             opts.parent = d;
             if (d.in && d.in === "both") {
-                d[childProp] = e.diffGroup(d.from, d.to, dim, opts);
+                d[childProp] = e.diffList(d.from, d.to, dim, opts);
             } else {
                 d[childProp] = e.group(d.records, dim, opts);
                 if (d.in ) {
@@ -365,7 +323,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
                 return c.leafNodes(level);
             }), true);
         }
-        return makeGroups(ret);
+        return makeList(ret);
     };
     /*  didn't make this yet, just copied from above
     Value.prototype.descendants = function(level) {
@@ -374,7 +332,7 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
             ret = _.flatten(_.map(this[childProp], function(c) {
                 return c.leafNodes(level);
             }), true);
-        return makeGroups(ret);
+        return makeList(ret);
     };
     */
     function delimOpts(opts) {
@@ -473,10 +431,10 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
      *
      * @memberof enlightenedData
      */
-    e.diffGroup = function(from, to, dim, opts) {
-        var fromGroup = e.group(from.records, dim, opts);
-        var toGroup = e.group(to.records, dim, opts);
-        var list = makeGroups(e.compare(fromGroup, toGroup, dim));
+    e.diffList = function(from, to, dim, opts) {
+        var fromList = e.group(from.records, dim, opts);
+        var toList = e.group(to.records, dim, opts);
+        var list = makeList(e.compare(fromList, toList, dim));
         list.dim = (opts && opts.dimName) ? opts.dimName : dim;
         return list;
     };
@@ -562,18 +520,21 @@ var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+r
     _.extend(StringValue.prototype, Value.prototype);
     _.extend(NumberValue.prototype, Value.prototype);
 
-    /** Sometimes a Group gets turned into a standard array,
+    /** Sometimes a List gets turned into a standard array,
      *  e.g., through slicing or sorting or filtering. 
-     *  addGroupMethods turns it back into a Group
+     *  addListMethods turns it back into a List
+     *
+     * `List` would be a constructor if IE10 supported
+     * \_\_proto\_\_, so it pretends to be one instead.
      *
      * @param {Array} Array to be extended
      *
      * @memberof enlightenedData
      */
-    e.addGroupMethods = function(arr) {
-        for(var method in Groups.prototype) {
+    e.addListMethods = function(arr) {
+        for(var method in List.prototype) {
             Object.defineProperty(arr, method, {
-                value: Groups.prototype[method]
+                value: List.prototype[method]
             });
         }
         _.unchain(arr);
