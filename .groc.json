@@ -1,5 +1,5 @@
 {
-  "glob": ["supergroup.js", "test/*.js"],
+  "glob": ["supergroup.js", "test/*.js", "lib"],
   "github": false,
   "repository-url": "https://github.com/Sigfried/supergroup",
   "index": "supergroup.js"
