@@ -38,6 +38,8 @@ var supergroup = (function() {
      * @param {function} [opts.dimName] defaults to the value of `dim`.
         * If `dim` is a function, the dimName will be ugly.
      * @return {Array of Values} enhanced with all the List methods
+     *
+     * Avaailable as _.supergroup, Underscore mixin
      */
     e.group = function(recs, dim, opts) {
         if (_(dim).isArray()) return e.multiDimList(recs, dim, opts); // handoff to multiDimmList if dim is an array
@@ -62,7 +64,14 @@ var supergroup = (function() {
             /* The original records in this group are stored as an Array in 
              * the records property (should probably be a getter method).
              */
-            val.records = e.addListMethods(pair[1]);
+            val.records = pair[1];
+            /* val.records is enhanced with Underscore methods for
+             * convenience, but also with the supergroup method that's
+             * been mixed in to Underscore. So you can group this specific
+             * subset like: val.records.supergroup
+             * on                                       FIX!!!!!!
+             */
+            _.unchain(val.records);
             val.dim = (opts.dimName) ? opts.dimName : dim;
             val.records.parentVal = val; // NOT TESTED, NOT USED, PROBABLY WRONG
             if (opts.parent)
@@ -406,7 +415,7 @@ var supergroup = (function() {
      * @param {list} Records to be summarized
      * @param {numericDim} Dimension to summarize by
      *
-     * @memberof enlightenedData
+     * @memberof supergroup
      */
     e.aggregate = function(list, numericDim) { 
         if (numericDim) {
@@ -429,7 +438,7 @@ var supergroup = (function() {
      *
      * used by treelike and some earlier code
      *
-     * @memberof enlightenedData
+     * @memberof supergroup
      */
     e.diffList = function(from, to, dim, opts) {
         var fromList = e.group(from.records, dim, opts);
@@ -445,7 +454,7 @@ var supergroup = (function() {
      * @param {B} ...
      * @param {dim} ...
      *
-     * @memberof enlightenedData
+     * @memberof supergroup
      */
     e.compare = function(A, B, dim) {
         var a = _(A).map(function(d) { return d+''; });
@@ -500,7 +509,7 @@ var supergroup = (function() {
      * @param {from} ...
      * @param {to} ...
      *
-     * @memberof enlightenedData
+     * @memberof supergroup
      */
     e.compareValue = function(from, to) {
         if (from.dim !== to.dim) {
@@ -529,7 +538,7 @@ var supergroup = (function() {
      *
      * @param {Array} Array to be extended
      *
-     * @memberof enlightenedData
+     * @memberof supergroup
      */
     e.addListMethods = function(arr) {
         for(var method in List.prototype) {
@@ -543,7 +552,7 @@ var supergroup = (function() {
     return e;
 }());
 
-_.mixin({supergroup: enlightenedData.group});
+_.mixin({supergroup: supergroup.group});
 
 if (typeof exports !== 'undefined') {   // not sure if this is all right
     if (typeof module !== 'undefined' && module.exports) {
