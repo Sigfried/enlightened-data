@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en" class="two-column-layout"><head><title>groups.spec</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="groups.spec"><meta name="groc-project-path" content="test/groups.spec.js"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">test/groups.spec.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="s1">&#39;use strict()&#39;</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>global: describe */
+describe('_.supergroup', function() {
+    var self = this;
+    var gradeBook = [
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C', num: 2},
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
+        {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B', num: 3},
+        {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'B', num:3}];</p>
+
+<pre><code>beforeEach(function() {
+    self.gradesByLastName = _.supergroup(gradeBook, 'lastName');
+    self.gradesByName = _.supergroup(gradeBook,  
+            function(d) { return d.firstName + ' ' + d.lastName; },  
+            {dimName: 'fullName'});
+    self.gradesByGradeLastName = _.supergroup(gradeBook, ['grade','lastName']);
+
+    self.groups = enlightenedData.addGroupMethods([]); // for tests Gemma wrote
+});
+
+it('should apply Groups methods to arrays', function() {
+    expect(self.gradesByLastName.asRootVal).toBeDefined();
+    expect(self.gradesByLastName.rawValues).toBeDefined();
+    expect(self.gradesByLastName.lookup).toBeDefined();
+    expect(self.gradesByLastName.singleLookup).toBeDefined();
+    expect(self.gradesByLastName.flattenTree).toBeDefined();
+    // other methods ?
+});
+it('should group stuff into an array', function() {
+    expect(JSON.stringify(self.gradesByLastName)).toEqual('["Gold","Else"]');
+    expect(JSON.stringify(self.gradesByName)).toEqual('["Sigfried Gold","Someone Else"]');
+    expect(JSON.stringify(self.gradesByGradeLastName.sort())).toEqual('["B","C"]');
+});
+it('should assign records to the right groups', function() {
+    expect(JSON.stringify(self.gradesByLastName[0].records)).toEqual(
+        '[{"firstName":"Sigfried","lastName":"Gold","class":"Remedial Programming","grade":"C","num":2},{"firstName":"Sigfried","lastName":"Gold","class":"Literary Posturing","grade":"B","num":3},{"firstName":"Sigfried","lastName":"Gold","class":"Documenting with Pretty Colors","grade":"B","num":3}]');
+});
+
+
+describe('asRootVal', function() {
+    it('should set its dimension as "root"', function() {
+        var root = self.groups.asRootVal();
+        expect(root.dim).toBe('root');
+    });
+
+    it('should assign its records to the current group', function() {
+        var root = self.groups.asRootVal();
+        expect(root.records).toEqual(self.groups);
+
+        var groups = enlightenedData.addGroupMethods([1, 2, true, 'herp']);
+        root = groups.asRootVal();
+        expect(root.records).toEqual(groups);
+    });
+
+    xit('should set its name to a provided value, or "Root"', function() {
+</code></pre>
+
+<p>TODO: not at all sure how this works yet </p></div></div><div class="code"><div class="wrapper">        <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;rawValues&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">get_raw</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">groups</span><span class="p">.</span><span class="nx">rawValues</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should do nothing for empty arrays&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([])).</span><span class="nx">toEqual</span><span class="p">([]);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should do nothing for string arrays&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">])).</span><span class="nx">toEqual</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should turn numeric types into strings&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])).</span><span class="nx">toEqual</span><span class="p">([</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should turn boolean types into strings&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">get_raw</span><span class="p">([</span><span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">])).</span><span class="nx">toEqual</span><span class="p">([</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">]);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;underscoreMethods&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//var arr;</span>
+        <span class="kd">function</span> <span class="nx">addMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">addGroupMethods</span><span class="p">(</span><span class="nx">array</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">groups</span><span class="p">;</span>
+        <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>    beforeEach(function() {
+        arr = addMethods([1,2,3]);
+        _(enlightenedData.underscoreMethods).each(function(method) {
+            spyOn(arr, method);
+            arr[method]();
+        })
+    })
+</code></pre></div></div><div class="code"><div class="wrapper">        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add all the methods&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">addMethods</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]);</span>
+            <span class="nx">_</span><span class="p">(</span><span class="nx">enlightenedData</span><span class="p">.</span><span class="nx">underscoreMethods</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">method</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">expect</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">method</span><span class="p">]).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">});</span></div></div></div></div></body></html>
