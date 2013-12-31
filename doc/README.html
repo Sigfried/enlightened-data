@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><title>README</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="README"><meta name="groc-project-path" content="README.md"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">README.md</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="enlightened-data">enlightened-data</h1>
+
+<p>Author: <a href="http://sigfried.org">Sigfried Gold</a> <br />
+License: <a href="http://sigfried.mit-license.org/">MIT</a>  </p>
+
+<pre><code>var gradeBook = [
+   {firstName: 'Sigfried', lastName: 'Gold', class: 'Remedial Programming', grade: 'C+', num: 2.2},
+   {firstName: 'Sigfried', lastName: 'Gold', class: 'Literary Posturing', grade: 'B', num: 3},
+   {firstName: 'Sigfried', lastName: 'Gold', class: 'Documenting with Pretty Colors', grade: 'B-', num: 2.7},
+   {firstName: 'Someone', lastName: 'Else', class: 'Remedial Programming', grade: 'A'}];
+
+var gradesByLastName = enlightenedData.group(gradeBook, 'lastName')
+
+var gradesByName = enlightenedData.group(gradeBook,  
+        function(d) { return d.lastName + ', ' + d.firstName },  
+        {dimName: 'fullName'})
+
+var sigfried = gradesByName.lookup('Gold, Sigfried');
+sigfried.records.length; // 3
+var sigfriedGPA = sigfried.records.reduce(function(result,rec) { return result+rec.num }, 0) / sigfried.records.length;
+(it does much much more, will explain below)
+</code></pre></div></div></div></div></body></html>
